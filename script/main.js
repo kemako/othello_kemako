@@ -247,9 +247,16 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
 
       placeCircle(currentPos);
       console.log(count);
-      status = "end";
     }
   }
+
+  var alertmsg = function(){
+    console.log("3秒経過");
+    status = "end";
+    autoWhite();
+  }
+
+  setTimeout(alertmsg, 2000);
 
   // scores = calScore();
   // whiteScore = scores[0];
@@ -264,42 +271,44 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
   //   rivalColor = "black";
   //   myColor = "white";
   // }
-  console.log(myColor);
-  if (status == "end") {
-    console.log("end");
-    var maxWhite = {score: 0, pos: []};
-    console.log(maxWhite);
-    for (var i = 0; i < board.length; i++) {
-      for (var j = 0; j < board[i].length; j++) {
-        checkAllDirection([i,j]);
-        console.log(placeable);
-        if (placeable == "true") {
-          scores = calScore();
-          whiteScore = scores[0];
-          if (maxWhite.score < whiteScore) {
-            maxWhite.score = whiteScore;
-            maxWhite.pos = [i,j];
-            console.log(maxWhite);
+  function autoWhite(){
+
+    console.log(myColor);
+    if (status == "end") {
+      // console.log("end");
+      var maxWhite = {score: 0, pos: []};
+      // console.log(maxWhite);
+      for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board[i].length; j++) {
+          checkAllDirection([i,j]);
+          // console.log(placeable);
+          if (placeable == "true") {
+            scores = calScore();
+            whiteScore = scores[0];
+            if (maxWhite.score < whiteScore) {
+              maxWhite.score = whiteScore;
+              maxWhite.pos = [i,j];
+              // console.log(maxWhite);
+            }
           }
         }
       }
-    }
-    checkAllDirection(maxWhite.pos);
+      checkAllDirection(maxWhite.pos);
 
-    if (placeable == "true") {
-      console.log('true');
+      if (placeable == "true") {
 
-      changeColor(up);
-      changeColor(down);
-      changeColor(left);
-      changeColor(right);
-      changeColor(ur);
-      changeColor(dr);
-      changeColor(dl);
-      changeColor(ul);
+        changeColor(up);
+        changeColor(down);
+        changeColor(left);
+        changeColor(right);
+        changeColor(ur);
+        changeColor(dr);
+        changeColor(dl);
+        changeColor(ul);
 
-      placeCircle(maxWhite.pos);
-      console.log("place white");
+        placeCircle(maxWhite.pos);
+        // console.log("place white");
+      }
     }
   }
 
