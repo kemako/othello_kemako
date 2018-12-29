@@ -26,6 +26,8 @@ var ul = [];
 var myColor;
 var rivalColor;
 
+var placeable = "false";
+
 ctx.lineWidth = 2;
 // ctx.fillStyle = 'rgba(155, 187, 89, 0.7)';
 ctx.fillStyle = 'seagreen';
@@ -82,7 +84,7 @@ function changeColor(arr) {
   }
 }
 
-function checkAllDirection(pos) {
+function initDirection(){
   up = [];
   down = [];
   right = [];
@@ -91,6 +93,11 @@ function checkAllDirection(pos) {
   dr = [];
   dl = [];
   ul = [];
+  placeable = "false";
+}
+
+function checkAllDirection(pos) {
+  initDirection();
 
   checkDirection(pos, 'up');
   checkDirection(pos, 'down');
@@ -104,9 +111,10 @@ function checkAllDirection(pos) {
   if (up.length + down.length + right.length + left.length + ur.length
     + dr.length + dl.length + ul.length > 0){
     console.log(up,down,right,left,ur,dr,dl,ul);
-    placeCircle(pos);
+    placeable = "true";
   } else {
     console.log("false");
+    placeable = "false";
   }
 }
 
@@ -157,7 +165,7 @@ function checkDirection(pos, direction){
       arr.push(newPos);
       checkDirection(newPos,direction);
     } else if (color == myColor) {
-      changeColor(arr);
+      // changeColor(arr);
     } else {
       arr.length = 0;
     }
@@ -165,6 +173,7 @@ function checkDirection(pos, direction){
 }
 
 initOthello();
+
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
 	var clickX = event.pageX ;
@@ -191,7 +200,23 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     centerX = Math.floor(centerCircle.x);
     centerY = Math.floor(centerCircle.y);
     currentPos = [centerX,centerY]
+
+    // if(myColor = "white")
     checkAllDirection(currentPos);
+    if (placeable == "true") {
+      console.log('true');
+
+      changeColor(up);
+      changeColor(down);
+      changeColor(left);
+      changeColor(right);
+      changeColor(ur);
+      changeColor(dr);
+      changeColor(dl);
+      changeColor(ul);
+
+      placeCircle(currentPos);
+    }
   }
 
   var whiteScore = 0;
