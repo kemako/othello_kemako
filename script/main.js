@@ -71,13 +71,8 @@ function calCenter(x,y){
 };
 
 function placeCircle(pos){
-  if(count%2 == 1){
-    drawCircle(pos,'white');
-    count++;
-  } else {
-    drawCircle(pos,'black');
-    count++;
-  }
+  drawCircle(pos,myColor);
+  count++;
 }
 
 function changeColor(arr) {
@@ -150,13 +145,6 @@ function checkDirection(pos, direction){
   var y = pos[1] + deltaY;
   if(x >= 0 && x < 8 && y >= 0 && y < 8) {
     var color = board[x][y];
-    if(count%2 == 1){
-      rivalColor = "white";
-      myColor = "black";
-    } else {
-      rivalColor = "black";
-      myColor = "white";
-    }
     // console.log(rivalColor,color);
 
     if(color == rivalColor){
@@ -187,6 +175,15 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
 	// 要素内におけるクリック位置を計算
 	var x = clickX - positionX ;
 	var y = clickY - positionY ;
+
+  if(count%2 == 0){
+    rivalColor = "white";
+    myColor = "black";
+  } else {
+    rivalColor = "black";
+    myColor = "white";
+  }
+
   if(x && y){
     centerCircle = calCenter(x,y);
     centerX = Math.floor(centerCircle.x);
