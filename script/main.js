@@ -141,24 +141,18 @@ function checkDirection(pos, direction){
     arr = ul;
   }
 
-  var x = pos[0] + deltaX;
-  var y = pos[1] + deltaY;
-  if(x >= 0 && x < 8 && y >= 0 && y < 8) {
-    var color = board[x][y];
-    // console.log(rivalColor,color);
+  var newPos = [pos[0] + deltaX, pos[1] + deltaY];
+  if(newPos[0] >= 0 && newPos[0] < 8 && newPos[1] >= 0 && newPos[1] < 8) {
+    var color = board[newPos[0]][newPos[1]];
 
     if(color == rivalColor){
-      newPos = [pos[0] + deltaX, pos[1] + deltaY]
       arr.push(newPos);
       checkDirection(newPos,direction);
     } else if (color == myColor) {
       changeColor(arr);
-      return false;
     } else {
-      return false;
     }
   }
-  return false;
 }
 
 initOthello();
