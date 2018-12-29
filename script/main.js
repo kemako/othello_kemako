@@ -15,7 +15,15 @@ for (var i = 0; i <= 7 ; i++) {
 }
 
 var up = [];
+var down = [];
+var right = [];
+var left = [];
+var ur = [];
+var dr = [];
+var dl = [];
+var ul = [];
 
+var myColor;
 var rivalColor;
 
 ctx.lineWidth = 2;
@@ -73,43 +81,97 @@ function placeCircle(pos){
 }
 
 function changeColor(arr) {
-  var myColor;
-  if (rivalColor == 'white') {
-    myColor = 'black';
-  } else {
-    myColor = 'white';
-  }
-
   for (var i = 0; i < arr.length; i++){
     drawCircle(arr[i],myColor);
   }
 }
 
-//上にあるライバルの座標をupに格納していく
-function checkUp(pos){
-  var x = pos[0];
-  var y = pos[1]-1;
-  var color = board[x][y];
-  if(count%2 == 1){
-    rivalColor = "white";
-  } else {
-    rivalColor = "black";
-  }
-  console.log(rivalColor,color);
+function checkAllDirection(pos) {
+  up = [];
+  down = [];
+  right = [];
+  left = [];
+  ur = [];
+  dr = [];
+  dl = [];
+  ul = [];
 
-  if(y >= 0){
+  checkDirection(pos, 'up');
+  checkDirection(pos, 'down');
+  checkDirection(pos, 'right');
+  checkDirection(pos, 'left');
+  checkDirection(pos, 'ur');
+  checkDirection(pos, 'dr');
+  checkDirection(pos, 'dl');
+  checkDirection(pos, 'ul');
+  console.log(up);
+}
+
+// directionの方向にある敵の座標を格納していく
+function checkDirection(pos, direction){
+  var deltaX;
+  var deltaY;
+  var arr;
+  if (direction == 'up') {
+    deltaX = 0;
+    deltaY = -1;
+    arr = up;
+  } else if (direction == 'down') {
+    deltaX = 0;
+    deltaY = +1;
+    arr = down;
+  } else if (direction == 'right') {
+    deltaX = +1;
+    deltaY = 0;
+    arr = right;
+  } else if (direction == 'left') {
+    deltaX = -1;
+    deltaY = 0;
+    arr = left;
+  } else if (direction == 'ur') {
+    deltaX = +1;
+    deltaY = -1;
+    arr = ur;
+  } else if (direction == 'dr') {
+    deltaX = +1;
+    deltaY = +1;
+    arr = dr;
+  } else if (direction == 'dl') {
+    deltaX = -1;
+    deltaY = +1;
+    arr = dl;
+  } else if (direction == 'ul') {
+    deltaX = -1;
+    deltaY = -1;
+    arr = ul;
+  }
+
+  var x = pos[0] + deltaX;
+  var y = pos[1] + deltaY;
+  if(x >= 0 && x < 8 && y >= 0 && y < 8) {
+    var color = board[x][y];
+    if(count%2 == 1){
+      rivalColor = "white";
+      myColor = "black";
+    } else {
+      rivalColor = "black";
+      myColor = "white";
+    }
+    // console.log(rivalColor,color);
+
     if(color == rivalColor){
-      newPos = [pos[0], pos[1]-1]
-      up.push(newPos);
-      checkUp(newPos);
+      newPos = [pos[0] + deltaX, pos[1] + deltaY]
+      arr.push(newPos);
+      checkDirection(newPos,direction);
+    } else if (color == myColor) {
+      changeColor(arr);
+      return false;
     } else {
       return false;
     }
   }
   return false;
 }
-
-
 
 initOthello();
 
@@ -129,15 +191,10 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     centerCircle = calCenter(x,y);
     centerX = Math.floor(centerCircle.x);
     centerY = Math.floor(centerCircle.y);
-    console.log(centerX);
-    console.log(centerY);
+    currentPos = [centerX,centerY]
 
-    placeCircle([centerX,centerY]);
-    console.log(board[4]);
-    up = [];
-    checkUp([centerX,centerY]);
-    console.log(up);
-    changeColor(up);
+    placeCircle(currentPos);
+    checkAllDirection(currentPos);
 
   }
 });
