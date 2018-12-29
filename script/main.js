@@ -174,8 +174,23 @@ function checkDirection(pos, direction){
 
 initOthello();
 
+function calScore(){
+  var whiteScore = 0;
+  var blackScore = 0;
+  for (var i = 0; i < board.length; i++) {
+    for(var j = 0; j < board[i].length; j++) {
+      if(board[i][j] == "white") {
+        whiteScore++;
+      } else if (board[i][j] == "black") {
+        blackScore++;
+      }
+    }
+  }
+  return [whiteScore, blackScore];
+}
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
+  var status = "start";
 	var clickX = event.pageX ;
 	var clickY = event.pageY ;
 
@@ -203,6 +218,7 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
 
     // if(myColor = "white")
     checkAllDirection(currentPos);
+
     if (placeable == "true") {
       console.log('true');
 
@@ -216,22 +232,60 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
       changeColor(ul);
 
       placeCircle(currentPos);
+      console.log(count);
+      status = "end";
     }
   }
 
-  var whiteScore = 0;
-  var blackScore = 0;
-  for (var i = 0; i < board.length; i++) {
-    for(var j = 0; j < board[i].length; j++) {
-      if(board[i][j] == "white") {
-        whiteScore++;
-      } else if (board[i][j] == "black") {
-        blackScore++;
-      }
-    }
-  }
-
+  scores = calScore();
+  whiteScore = scores[0];
+  blackScore = scores[1];
   var score = document.getElementById("score").innerHTML
     = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
 
+  if(count%2 == 0){
+    rivalColor = "white";
+    myColor = "black";
+  } else {
+    rivalColor = "black";
+    myColor = "white";
+  }
+  console.log(myColor);
+  if (status == "end") {
+    console.log("end");
+    var maxWhite = {score: 0, pos: []};
+    console.log(maxWhite);
+    for (var i = 0; i < board.length; i++) {
+      for (var j = 0; j < board[i].length; j++) {
+        checkAllDirection([i,j]);
+        console.log(placeable);
+        if (placeable == "true") {
+          scores = calScore();
+          whiteScore = scores[0];
+          if (maxWhite.score < whiteScore) {
+            maxWhite.score = whiteScore;
+            maxWhite.pos = [i,j];
+            console.log(maxWhite);
+          }
+        }
+      }
+    }
+    checkAllDirection(maxWhite.pos);
+
+    if (placeable == "true") {
+      console.log('true');
+
+      changeColor(up);
+      changeColor(down);
+      changeColor(left);
+      changeColor(right);
+      changeColor(ur);
+      changeColor(dr);
+      changeColor(dl);
+      changeColor(ul);
+
+      placeCircle(maxWhite.pos);
+      console.log("place white");
+    }
+  }
 });
