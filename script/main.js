@@ -99,7 +99,14 @@ function checkAllDirection(pos) {
   checkDirection(pos, 'dr');
   checkDirection(pos, 'dl');
   checkDirection(pos, 'ul');
-  console.log(up);
+
+  if (up.length + down.length + right.length + left.length + ur.length
+    + dr.length + dl.length + ul.length > 0){
+    console.log(up,down,right,left,ur,dr,dl,ul);
+    placeCircle(pos);
+  } else {
+    console.log("false");
+  }
 }
 
 // directionの方向にある敵の座標を格納していく
@@ -151,6 +158,7 @@ function checkDirection(pos, direction){
     } else if (color == myColor) {
       changeColor(arr);
     } else {
+      arr.length = 0;
     }
   }
 }
@@ -178,13 +186,14 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     myColor = "white";
   }
 
+  var turn = document.getElementById("turn").innerHTML = "Next turn : " + rivalColor; 
+
   if(x && y){
     centerCircle = calCenter(x,y);
     centerX = Math.floor(centerCircle.x);
     centerY = Math.floor(centerCircle.y);
     currentPos = [centerX,centerY]
 
-    placeCircle(currentPos);
     checkAllDirection(currentPos);
 
   }
