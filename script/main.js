@@ -109,8 +109,7 @@ function calScore(){
   return [whiteScore, blackScore];
 };
 
-function placeCircle(pos){
-  drawCircle(pos,myColor);
+function changeTurn(){
   count++;
   document.getElementById("turn").innerHTML = "Next turn : " + rivalColor;
   if(count%2 == 0){
@@ -120,6 +119,11 @@ function placeCircle(pos){
     rivalColor = "black";
     myColor = "white";
   }
+}
+
+function placeCircle(pos){
+  drawCircle(pos,myColor);
+  changeTurn();
   scores = calScore();
   whiteScore = scores[0];
   blackScore = scores[1];
@@ -219,9 +223,7 @@ function checkDirection(pos, direction){
     } else if (color == myColor) {
       if (arr.length > 0) {
         changable = "true";
-        // break;
       }
-      // changeColor(arr);
     } else {
       arr.length = 0;
     }
@@ -236,7 +238,6 @@ function checkCandidate(){
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] == "no"){
         checkAllDirection([i,j]);
-        // console.log(placeable);
         if (placeable == "true") {
           candidate.push([i,j]);
         }
@@ -262,20 +263,12 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
 	var x = clickX - positionX ;
 	var y = clickY - positionY ;
 
-  // if(count%2 == 0){
-  //   rivalColor = "white";
-  //   myColor = "black";
-  // } else {
-  //   rivalColor = "black";
-  //   myColor = "white";
-  // }
   if(x && y){
     centerCircle = calCenter(x,y);
     centerX = Math.floor(centerCircle.x);
     centerY = Math.floor(centerCircle.y);
     currentPos = [centerX,centerY]
 
-    // if(myColor = "white")
     checkAllDirection(currentPos);
 
     if (placeable == "true") {
@@ -303,39 +296,20 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
 
   setTimeout(alertmsg, 2000);
 
-  // scores = calScore();
-  // whiteScore = scores[0];
-  // blackScore = scores[1];
-  // var score = document.getElementById("score").innerHTML
-  //   = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
-
-  // if(count%2 == 0){
-  //   rivalColor = "white";
-  //   myColor = "black";
-  // } else {
-  //   rivalColor = "black";
-  //   myColor = "white";
-  // }
   function autoWhite(){
-
-    console.log(myColor);
     if (checkCandidate().length > 0 && status == "end" && myColor == "white") {
       initDirection();
-      // console.log("end");
       var maxWhite = {score: 0, pos: []};
-      // console.log(maxWhite);
       for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
           if (board[i][j] == "no"){
             checkAllDirection([i,j]);
-            // console.log(placeable);
             if (placeable == "true") {
               scores = calScore();
               whiteScore = scores[0];
               if (maxWhite.score < whiteScore) {
                 maxWhite.score = whiteScore;
                 maxWhite.pos = [i,j];
-                // console.log(maxWhite);
               }
             }
           }
@@ -355,18 +329,10 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
         changeColor(ul);
 
         placeCircle(maxWhite.pos);
-        // console.log("place white");
       }
     } else if (checkCandidate().length == 0 && status == "end" && myColor == "white") {
       document.getElementById("comment").innerHTML = "No Place for White";
-      count++;
-      if(count%2 == 0){
-        rivalColor = "white";
-        myColor = "black";
-      } else {
-        rivalColor = "black";
-        myColor = "white";
-      }
+      changeTurn();
     }
   }
 
@@ -374,14 +340,7 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     document.getElementById("comment").innerHTML = "Go Black";
   } else if (myColor == "black" && checkCandidate().length == 0) {
     document.getElementById("comment").innerHTML = "No Place for Black";
-    count++;
-    if(count%2 == 0){
-      rivalColor = "white";
-      myColor = "black";
-    } else {
-      rivalColor = "black";
-      myColor = "white";
-    }
+    changeTurn();
     var alertmsg = function(){
       console.log("3秒経過");
       status = "end";
