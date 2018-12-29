@@ -7,6 +7,8 @@ var cs       = document.getElementById('othelloCanvas'),
       y: csHeight / 2
     };
 
+var count = 0;
+
 ctx.lineWidth = 2;
 // ctx.fillStyle = 'rgba(155, 187, 89, 0.7)';
 ctx.fillStyle = 'seagreen';
@@ -40,4 +42,46 @@ function initOthello(){
   drawCircle(3,4,'black');
 };
 
+function calCenter(x,y){
+  var centerCircle = {
+    x: x/60,
+    y: y/60
+  };
+  return centerCircle;
+};
+
+function placeCircle(x,y){
+  if(count%2 == 1){
+    drawCircle(x,y,'white');
+    count++;
+  } else {
+    drawCircle(x,y,'black');
+    count++;
+  }
+}
+
 initOthello();
+
+document.getElementById("othelloCanvas").addEventListener("click", function(event) {
+	var clickX = event.pageX ;
+	var clickY = event.pageY ;
+
+	// 要素の位置を取得
+	var clientRect = this.getBoundingClientRect() ;
+	var positionX = clientRect.left + window.pageXOffset ;
+	var positionY = clientRect.top + window.pageYOffset ;
+
+	// 要素内におけるクリック位置を計算
+	var x = clickX - positionX ;
+	var y = clickY - positionY ;
+  if(x && y){
+    centerCircle = calCenter(x,y);
+    centerX = Math.floor(centerCircle.x);
+    centerY = Math.floor(centerCircle.y);
+    console.log(centerX);
+    console.log(centerY);
+
+    placeCircle(centerX,centerY);
+
+  }
+});
