@@ -9,6 +9,15 @@ var cs       = document.getElementById('othelloCanvas'),
 
 var count = 0;
 
+var board = [];
+for (var i = 0; i <= 7 ; i++) {
+	board[i] = ["no","no","no","no","no","no","no","no"];
+}
+
+var up = [];
+
+var rivalColor;
+
 ctx.lineWidth = 2;
 // ctx.fillStyle = 'rgba(155, 187, 89, 0.7)';
 ctx.fillStyle = 'seagreen';
@@ -22,7 +31,10 @@ function drawLine(xStart,yStart,xEnd,yEnd) {
   ctx.stroke();
 };
 
-function drawCircle(x,y,color) {
+function drawCircle(pos,color) {
+  var x = pos[0];
+  var y = pos[1];
+  board[x][y] = color;
   ctx.beginPath();
   ctx.fillStyle = color;
   ctx.arc(60*x + 30 , 60*y + 30, 20, 0, Math.PI*2, true);
@@ -36,10 +48,10 @@ for (var i = 0; i <= 8; i++) {
 }
 
 function initOthello(){
-  drawCircle(4,4,'white');
-  drawCircle(4,3,'black');
-  drawCircle(3,3,'white');
-  drawCircle(3,4,'black');
+  drawCircle([4,4],'white');
+  drawCircle([4,3],'black');
+  drawCircle([3,3],'white');
+  drawCircle([3,4],'black');
 };
 
 function calCenter(x,y){
@@ -50,15 +62,54 @@ function calCenter(x,y){
   return centerCircle;
 };
 
-function placeCircle(x,y){
+function placeCircle(pos){
   if(count%2 == 1){
-    drawCircle(x,y,'white');
+    drawCircle(pos,'white');
     count++;
   } else {
-    drawCircle(x,y,'black');
+    drawCircle(pos,'black');
     count++;
   }
 }
+
+function changeColor(arr) {
+  var myColor;
+  if (rivalColor == 'white') {
+    myColor = 'black';
+  } else {
+    myColor = 'white';
+  }
+
+  for (var i = 0; i < arr.length; i++){
+    drawCircle(arr[i],myColor);
+  }
+}
+
+//上にあるライバルの座標をupに格納していく
+function checkUp(pos){
+  var x = pos[0];
+  var y = pos[1]-1;
+  var color = board[x][y];
+  if(count%2 == 1){
+    rivalColor = "white";
+  } else {
+    rivalColor = "black";
+  }
+  console.log(rivalColor,color);
+
+  if(y >= 0){
+    if(color == rivalColor){
+      newPos = [pos[0], pos[1]-1]
+      up.push(newPos);
+      checkUp(newPos);
+    } else {
+      return false;
+    }
+  }
+  return false;
+}
+
+
 
 initOthello();
 
@@ -81,7 +132,12 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     console.log(centerX);
     console.log(centerY);
 
-    placeCircle(centerX,centerY);
+    placeCircle([centerX,centerY]);
+    console.log(board[4]);
+    up = [];
+    checkUp([centerX,centerY]);
+    console.log(up);
+    changeColor(up);
 
   }
 });
