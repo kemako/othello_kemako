@@ -30,7 +30,7 @@ var placeable = "false";
 
 ctx.lineWidth = 2;
 // ctx.fillStyle = 'rgba(155, 187, 89, 0.7)';
-ctx.fillStyle = 'seagreen';
+ctx.fillStyle = "seagreen";
 ctx.fillRect(0, 0, 480, 480);
 
 function drawLine(xStart,yStart,xEnd,yEnd) {
@@ -50,7 +50,29 @@ function drawCircle(pos,color) {
   ctx.arc(60*x + 30 , 60*y + 30, 20, 0, Math.PI*2, true);
   ctx.fill();
   ctx.stroke();
-};
+}
+
+function initCircle(pos,color) {
+  var x = pos[0];
+  var y = pos[1];
+  board[x][y] = color;
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.arc(60*x + 30 , 60*y + 30, 20, 0, Math.PI*2, true);
+  ctx.fill();
+  ctx.stroke();
+}
+
+function drawSupportCircle(pos) {
+  var x = pos[0];
+  var y = pos[1];
+  ctx.beginPath();
+  ctx.fillStyle = "gold";
+  ctx.arc(60*x + 30 , 60*y + 30, 10, 0, Math.PI*2, true);
+  ctx.fill();
+  ctx.stroke();
+}
 
 for (var i = 0; i <= 8; i++) {
   drawLine(60*i,0,60*i,csHeight);
@@ -112,16 +134,19 @@ function changeColor(arr) {
 }
 
 function initDirection(){
-  up = [];
-  down = [];
-  right = [];
-  left = [];
-  ur = [];
-  dr = [];
-  dl = [];
-  ul = [];
+  up.length = 0;
+  down.length = 0;
+  right.length = 0;
+  left.length = 0;
+  ur.length = 0;
+  dr.length = 0;
+  dl.length = 0;
+  ul.length = 0;
   placeable = "false";
+  changable = "false";
 }
+
+var changable = "false";
 
 function checkAllDirection(pos) {
   initDirection();
@@ -135,8 +160,8 @@ function checkAllDirection(pos) {
   checkDirection(pos, 'dl');
   checkDirection(pos, 'ul');
 
-  if (up.length + down.length + right.length + left.length + ur.length
-    + dr.length + dl.length + ul.length > 0){
+  if ((up.length + down.length + right.length + left.length + ur.length
+    + dr.length + dl.length + ul.length > 0) && (changable == "true")){
     console.log(up,down,right,left,ur,dr,dl,ul);
     placeable = "true";
   } else {
@@ -192,16 +217,36 @@ function checkDirection(pos, direction){
       arr.push(newPos);
       checkDirection(newPos,direction);
     } else if (color == myColor) {
+      if (arr.length > 0) {
+        changable = "true";
+        // break;
+      }
       // changeColor(arr);
     } else {
       arr.length = 0;
     }
+  } else {
+    arr.length = 0;
   }
 }
 
+function checkCandidate(){
+  var candidate = [];
+  for (var i = 0; i < board.length; i++) {
+    for (var j = 0; j < board[i].length; j++) {
+      if (board[i][j] == "no"){
+        checkAllDirection([i,j]);
+        // console.log(placeable);
+        if (placeable == "true") {
+          candidate.push([i,j]);
+        }
+      }
+    }
+  }
+  return candidate;
+}
+
 initOthello();
-
-
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
   var status = "start";
@@ -274,21 +319,24 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
   function autoWhite(){
 
     console.log(myColor);
-    if (status == "end") {
+    if (checkCandidate().length > 0 && status == "end" && myColor == "white") {
+      initDirection();
       // console.log("end");
       var maxWhite = {score: 0, pos: []};
       // console.log(maxWhite);
       for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
-          checkAllDirection([i,j]);
-          // console.log(placeable);
-          if (placeable == "true") {
-            scores = calScore();
-            whiteScore = scores[0];
-            if (maxWhite.score < whiteScore) {
-              maxWhite.score = whiteScore;
-              maxWhite.pos = [i,j];
-              // console.log(maxWhite);
+          if (board[i][j] == "no"){
+            checkAllDirection([i,j]);
+            // console.log(placeable);
+            if (placeable == "true") {
+              scores = calScore();
+              whiteScore = scores[0];
+              if (maxWhite.score < whiteScore) {
+                maxWhite.score = whiteScore;
+                maxWhite.pos = [i,j];
+                // console.log(maxWhite);
+              }
             }
           }
         }
@@ -309,7 +357,37 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
         placeCircle(maxWhite.pos);
         // console.log("place white");
       }
+    } else if (checkCandidate().length == 0 && status == "end" && myColor == "white") {
+      document.getElementById("comment").innerHTML = "No Place for White";
+      count++;
+      if(count%2 == 0){
+        rivalColor = "white";
+        myColor = "black";
+      } else {
+        rivalColor = "black";
+        myColor = "white";
+      }
     }
+  }
+
+  if(myColor == "black" && checkCandidate().length > 0) {
+    document.getElementById("comment").innerHTML = "Go Black";
+  } else if (myColor == "black" && checkCandidate().length == 0) {
+    document.getElementById("comment").innerHTML = "No Place for Black";
+    count++;
+    if(count%2 == 0){
+      rivalColor = "white";
+      myColor = "black";
+    } else {
+      rivalColor = "black";
+      myColor = "white";
+    }
+    var alertmsg = function(){
+      console.log("3秒経過");
+      status = "end";
+      autoWhite();
+    }
+    setTimeout(alertmsg, 2000);
   }
 
 });
