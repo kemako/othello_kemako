@@ -23,8 +23,8 @@ var dr = [];
 var dl = [];
 var ul = [];
 
-var myColor;
-var rivalColor;
+var myColor = "black";
+var rivalColor = "white";
 
 var placeable = "false";
 
@@ -72,10 +72,37 @@ function calCenter(x,y){
   return centerCircle;
 };
 
+function calScore(){
+  var whiteScore = 0;
+  var blackScore = 0;
+  for (var i = 0; i < board.length; i++) {
+    for(var j = 0; j < board[i].length; j++) {
+      if(board[i][j] == "white") {
+        whiteScore++;
+      } else if (board[i][j] == "black") {
+        blackScore++;
+      }
+    }
+  }
+  return [whiteScore, blackScore];
+};
+
 function placeCircle(pos){
   drawCircle(pos,myColor);
   count++;
   document.getElementById("turn").innerHTML = "Next turn : " + rivalColor;
+  if(count%2 == 0){
+    rivalColor = "white";
+    myColor = "black";
+  } else {
+    rivalColor = "black";
+    myColor = "white";
+  }
+  scores = calScore();
+  whiteScore = scores[0];
+  blackScore = scores[1];
+  var score = document.getElementById("score").innerHTML
+    = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
 }
 
 function changeColor(arr) {
@@ -174,20 +201,7 @@ function checkDirection(pos, direction){
 
 initOthello();
 
-function calScore(){
-  var whiteScore = 0;
-  var blackScore = 0;
-  for (var i = 0; i < board.length; i++) {
-    for(var j = 0; j < board[i].length; j++) {
-      if(board[i][j] == "white") {
-        whiteScore++;
-      } else if (board[i][j] == "black") {
-        blackScore++;
-      }
-    }
-  }
-  return [whiteScore, blackScore];
-}
+
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
   var status = "start";
@@ -203,13 +217,13 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
 	var x = clickX - positionX ;
 	var y = clickY - positionY ;
 
-  if(count%2 == 0){
-    rivalColor = "white";
-    myColor = "black";
-  } else {
-    rivalColor = "black";
-    myColor = "white";
-  }
+  // if(count%2 == 0){
+  //   rivalColor = "white";
+  //   myColor = "black";
+  // } else {
+  //   rivalColor = "black";
+  //   myColor = "white";
+  // }
   if(x && y){
     centerCircle = calCenter(x,y);
     centerX = Math.floor(centerCircle.x);
@@ -237,19 +251,19 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     }
   }
 
-  scores = calScore();
-  whiteScore = scores[0];
-  blackScore = scores[1];
-  var score = document.getElementById("score").innerHTML
-    = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
+  // scores = calScore();
+  // whiteScore = scores[0];
+  // blackScore = scores[1];
+  // var score = document.getElementById("score").innerHTML
+  //   = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
 
-  if(count%2 == 0){
-    rivalColor = "white";
-    myColor = "black";
-  } else {
-    rivalColor = "black";
-    myColor = "white";
-  }
+  // if(count%2 == 0){
+  //   rivalColor = "white";
+  //   myColor = "black";
+  // } else {
+  //   rivalColor = "black";
+  //   myColor = "white";
+  // }
   console.log(myColor);
   if (status == "end") {
     console.log("end");
@@ -288,4 +302,5 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
       console.log("place white");
     }
   }
+
 });
