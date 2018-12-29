@@ -73,6 +73,7 @@ function calCenter(x,y){
 function placeCircle(pos){
   drawCircle(pos,myColor);
   count++;
+  document.getElementById("turn").innerHTML = "Next turn : " + rivalColor;
 }
 
 function changeColor(arr) {
@@ -185,16 +186,27 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     rivalColor = "black";
     myColor = "white";
   }
-
-  var turn = document.getElementById("turn").innerHTML = "Next turn : " + rivalColor; 
-
   if(x && y){
     centerCircle = calCenter(x,y);
     centerX = Math.floor(centerCircle.x);
     centerY = Math.floor(centerCircle.y);
     currentPos = [centerX,centerY]
-
     checkAllDirection(currentPos);
-
   }
+
+  var whiteScore = 0;
+  var blackScore = 0;
+  for (var i = 0; i < board.length; i++) {
+    for(var j = 0; j < board[i].length; j++) {
+      if(board[i][j] == "white") {
+        whiteScore++;
+      } else if (board[i][j] == "black") {
+        blackScore++;
+      }
+    }
+  }
+
+  var score = document.getElementById("score").innerHTML
+    = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
+
 });
