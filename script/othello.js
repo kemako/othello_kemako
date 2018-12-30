@@ -184,6 +184,7 @@ initOthello();
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
   if (checkCandidate().length > 0){
+    document.getElementById("comment").innerHTML = " ";
     var status = "start";
   	var clickX = event.pageX ;
   	var clickY = event.pageY ;
@@ -240,6 +241,7 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
   function autoWhite(){
     if (status == "end") {
       if (checkCandidate().length > 0) {
+        document.getElementById("comment").innerHTML = " ";
 
         var maxWhite = {score: 0, pos: []};
 
