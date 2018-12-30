@@ -65,7 +65,8 @@ function calScore(){
       }
     }
   }
-  return [whiteScore, blackScore];
+  document.getElementById("score").innerHTML
+    = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
 };
 
 function changeTurn(){
@@ -74,20 +75,6 @@ function changeTurn(){
   myColor = rivalColor;
   rivalColor = tmpColor;
 }
-
-// function placeCircle(pos){
-//   var x = pos[0];
-//   var y = pos[1];
-//   // board[x][y] = myColor;
-//   drawCircle(pos,myColor);
-//   board[x][y] = myColor;
-//   changeTurn();
-//   scores = calScore();
-//   whiteScore = scores[0];
-//   blackScore = scores[1];
-//   var score = document.getElementById("score").innerHTML
-//     = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
-// }
 
 function updateBoard(data, color) {
   for (var i = 0; i < data.length; i++){
@@ -105,17 +92,6 @@ function drawBoard() {
   }
 }
 
-// function changeColor(arr) {
-//   for (var i = 0; i < arr.length; i++){
-//     var x = arr[i][0];
-//     var y = arr[i][1];
-//     console.log(x,y);
-//
-//     drawCircle(arr[i],myColor);
-//     board[x][y] = myColor;
-//   }
-// }
-
 function initDirection(){
   up.data.length = 0;
   down.data.length = 0;
@@ -125,7 +101,6 @@ function initDirection(){
   dr.data.length = 0;
   dl.data.length = 0;
   ul.data.length = 0;
-  placeable = "false";
 }
 
 function checkAllDirection(pos) {
@@ -139,7 +114,6 @@ function checkAllDirection(pos) {
   checkDirection(pos, dr);
   checkDirection(pos, dl);
   checkDirection(pos, ul);
-
 }
 
 function checkRule(pos){
@@ -161,7 +135,6 @@ function checkDirection(pos, direction){
   var newPos = [pos[0] + deltaX, pos[1] + deltaY];
   if(newPos[0] >= 0 && newPos[0] < 8 && newPos[1] >= 0 && newPos[1] < 8) {
     var color = board[newPos[0]][newPos[1]];
-    console.log(color);
 
     if(color == rivalColor){
       data.push(newPos);
@@ -177,20 +150,20 @@ function checkDirection(pos, direction){
   }
 }
 
-// function checkCandidate(){
-//   var candidate = [];
-//   for (var i = 0; i < board.length; i++) {
-//     for (var j = 0; j < board[i].length; j++) {
-//       if (board[i][j] == "no"){
-//         checkAllDirection([i,j]);
-//         if (placeable == "true") {
-//           candidate.push([i,j]);
-//         }
-//       }
-//     }
-//   }
-//   return candidate;
-// }
+function checkCandidate(){
+  var candidate = [];
+  for (var i = 0; i < board.length; i++) {
+    for (var j = 0; j < board[i].length; j++) {
+      if (board[i][j] == "no"){
+        checkAllDirection([i,j]);
+        if (checkRule([i,j])) {
+          candidate.push([i,j]);
+        }
+      }
+    }
+  }
+  return candidate;
+}
 
 function initOthello(){
   ctx.lineWidth = 2;
@@ -210,101 +183,93 @@ function initOthello(){
 initOthello();
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
-  var status = "start";
-	var clickX = event.pageX ;
-	var clickY = event.pageY ;
+  if (checkCandidate().length > 0){
+    var status = "start";
+  	var clickX = event.pageX ;
+  	var clickY = event.pageY ;
 
-	// 要素の位置を取得
-	var clientRect = this.getBoundingClientRect() ;
-	var positionX = clientRect.left + window.pageXOffset ;
-	var positionY = clientRect.top + window.pageYOffset ;
+  	// 要素の位置を取得
+  	var clientRect = this.getBoundingClientRect() ;
+  	var positionX = clientRect.left + window.pageXOffset ;
+  	var positionY = clientRect.top + window.pageYOffset ;
 
-	// 要素内におけるクリック位置を計算
-	var x = clickX - positionX ;
-	var y = clickY - positionY ;
+  	// 要素内におけるクリック位置を計算
+  	var x = clickX - positionX ;
+  	var y = clickY - positionY ;
 
-  if(x && y){
-    centerCircle = calCenter(x,y);
-    centerX = Math.floor(centerCircle.x);
-    centerY = Math.floor(centerCircle.y);
-    currentPos = [centerX,centerY]
+    if(x && y){
+      centerCircle = calCenter(x,y);
+      centerX = Math.floor(centerCircle.x);
+      centerY = Math.floor(centerCircle.y);
+      currentPos = [centerX,centerY]
 
-    checkAllDirection(currentPos);
-    console.log("hh");
-    console.log(placeable);
+      checkAllDirection(currentPos);
+      console.log("hh");
+      console.log(placeable);
 
-    if (checkRule(currentPos)) {
-      console.log("true");
-      changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
-      changePos.push(currentPos);
-      console.log(currentPos);
-      console.log(changePos);
+      if (checkRule(currentPos)) {
+        console.log("true");
+        changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
+        changePos.push(currentPos);
+        console.log(currentPos);
+        console.log(changePos);
 
-      updateBoard(changePos, myColor);
-      drawBoard();
-      changeTurn();
+        updateBoard(changePos, myColor);
+        drawBoard();
+        console.log(board);
+        changeTurn();
+        calScore();
+      }
     }
+  } else {
+    document.getElementById("comment").innerHTML = "No Place for Black";
+    changeTurn();
+    calScore();
   }
 
-  // var alertmsg = function(){
-  //   console.log("3秒経過");
-  //   status = "end";
-  //   autoWhite();
-  // }
-  //
-  // setTimeout(alertmsg, 2000);
-  //
-  // function autoWhite(){
-  //   if (checkCandidate().length > 0 && status == "end" && myColor == "white") {
-  //     initDirection();
-  //     var maxWhite = {score: 0, pos: []};
-  //     for (var i = 0; i < board.length; i++) {
-  //       for (var j = 0; j < board[i].length; j++) {
-  //         if (board[i][j] == "no"){
-  //           checkAllDirection([i,j]);
-  //           if (placeable == "true") {
-  //             scores = calScore();
-  //             whiteScore = scores[0];
-  //             if (maxWhite.score < whiteScore) {
-  //               maxWhite.score = whiteScore;
-  //               maxWhite.pos = [i,j];
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //     checkAllDirection(maxWhite.pos);
-  //
-  //     if (placeable == "true") {
-  //
-  //       changeColor(up);
-  //       changeColor(down);
-  //       changeColor(left);
-  //       changeColor(right);
-  //       changeColor(ur);
-  //       changeColor(dr);
-  //       changeColor(dl);
-  //       changeColor(ul);
-  //
-  //       placeCircle(maxWhite.pos);
-  //     }
-  //   } else if (checkCandidate().length == 0 && status == "end" && myColor == "white") {
-  //     document.getElementById("comment").innerHTML = "No Place for White";
-  //     changeTurn();
-  //   }
-  // }
-  //
-  // if(myColor == "black" && checkCandidate().length > 0) {
-  //   document.getElementById("comment").innerHTML = "Go Black";
-  // } else if (myColor == "black" && checkCandidate().length == 0) {
-  //   document.getElementById("comment").innerHTML = "No Place for Black";
-  //   changeTurn();
-  //   var alertmsg = function(){
-  //     console.log("3秒経過");
-  //     status = "end";
-  //     autoWhite();
-  //   }
-  //   setTimeout(alertmsg, 2000);
-  // }
+  var alertmsg = function(){
+    console.log("3秒経過");
+    status = "end";
+    autoWhite();
+  }
 
+  if (myColor == "white"){
+    setTimeout(alertmsg, 2000);
+  }
+
+  function autoWhite(){
+    if (status == "end") {
+      if (checkCandidate().length > 0) {
+
+        var maxWhite = {score: 0, pos: []};
+
+        for (var i = 0; i < board.length; i++) {
+          for (var j = 0; j < board[i].length; j++) {
+            if (board[i][j] == "no"){
+              checkAllDirection([i,j]);
+              if (checkRule([i,j])) {
+                // scores = calScore();
+                // whiteScore = scores[0];
+                // if (maxWhite.score < whiteScore) {
+                  // maxWhite.score = whiteScore;
+                  maxWhite.pos = [i,j];
+              }
+            }
+          }
+        }
+
+        checkAllDirection(maxWhite.pos);
+
+        changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
+        changePos.push(maxWhite.pos);
+
+        updateBoard(changePos, myColor);
+        drawBoard();
+      } else {
+        document.getElementById("comment").innerHTML = "No Place for White";
+      }
+    }
+    changeTurn();
+    calScore();
+  }
 });
