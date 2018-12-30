@@ -67,7 +67,22 @@ function calScore(){
   }
   document.getElementById("score").innerHTML
     = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
-};
+}
+
+function evaluateBoard(boardEvaluate){
+  var whiteScore = 0;
+  var blackScore = 0;
+  for (var i = 0; i < boardEvaluate.length; i++) {
+    for(var j = 0; j < boardEvaluate[i].length; j++) {
+      if(boardEvaluate[i][j] == "white") {
+        whiteScore++;
+      } else if (boardEvaluate[i][j] == "black") {
+        blackScore++;
+      }
+    }
+  }
+  return whiteScore;
+}
 
 function changeTurn(){
   document.getElementById("turn").innerHTML = "Next turn : " + rivalColor;
@@ -76,9 +91,9 @@ function changeTurn(){
   rivalColor = tmpColor;
 }
 
-function updateBoard(data, color) {
+function updateBoard(data, color, boardUpdate) {
   for (var i = 0; i < data.length; i++){
-    board[data[i][0]][data[i][1]] = color;
+    boardUpdate[data[i][0]][data[i][1]] = color;
   }
 }
 
@@ -175,103 +190,109 @@ function initOthello(){
   }
   white = [[4,4],[3,3]];
   black = [[3,4],[4,3]];
-  updateBoard(white, "white");
-  updateBoard(black, "black");
+  updateBoard(white, "white", board);
+  updateBoard(black, "black", board);
   drawBoard();
 };
 
 initOthello();
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
-  if (checkCandidate().length > 0){
-    document.getElementById("comment").innerHTML = " ";
-    var status = "start";
-  	var clickX = event.pageX ;
-  	var clickY = event.pageY ;
+  if (myColor == "black"){
+    if (checkCandidate().length > 0){
+      document.getElementById("comment").innerHTML = " ";
+      var status = "start";
+    	var clickX = event.pageX ;
+    	var clickY = event.pageY ;
 
-  	// 要素の位置を取得
-  	var clientRect = this.getBoundingClientRect() ;
-  	var positionX = clientRect.left + window.pageXOffset ;
-  	var positionY = clientRect.top + window.pageYOffset ;
+    	// 要素の位置を取得
+    	var clientRect = this.getBoundingClientRect() ;
+    	var positionX = clientRect.left + window.pageXOffset ;
+    	var positionY = clientRect.top + window.pageYOffset ;
 
-  	// 要素内におけるクリック位置を計算
-  	var x = clickX - positionX ;
-  	var y = clickY - positionY ;
+    	// 要素内におけるクリック位置を計算
+    	var x = clickX - positionX ;
+    	var y = clickY - positionY ;
 
-    if(x && y){
-      centerCircle = calCenter(x,y);
-      centerX = Math.floor(centerCircle.x);
-      centerY = Math.floor(centerCircle.y);
-      currentPos = [centerX,centerY]
+      if(x && y){
+        centerCircle = calCenter(x,y);
+        centerX = Math.floor(centerCircle.x);
+        centerY = Math.floor(centerCircle.y);
+        currentPos = [centerX,centerY]
 
-      checkAllDirection(currentPos);
-      console.log("hh");
-      console.log(placeable);
+        checkAllDirection(currentPos);
+        console.log("hh");
+        console.log(placeable);
 
-      if (checkRule(currentPos)) {
-        console.log("true");
-        changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
-        changePos.push(currentPos);
-        console.log(currentPos);
-        console.log(changePos);
+        if (checkRule(currentPos)) {
+          changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
+          changePos.push(currentPos);
 
-        updateBoard(changePos, myColor);
-        drawBoard();
-        console.log(board);
-        changeTurn();
-        calScore();
+          updateBoard(changePos, myColor, board);
+          drawBoard();
+          // console.log(board);
+          changeTurn();
+          calScore();
+        }
       }
+    } else {
+      document.getElementById("comment").innerHTML = "No Place for Black";
+      changeTurn();
+      calScore();
     }
-  } else {
-    document.getElementById("comment").innerHTML = "No Place for Black";
-    changeTurn();
-    calScore();
-  }
 
-  var alertmsg = function(){
-    console.log("3秒経過");
-    status = "end";
-    autoWhite();
-  }
+    var alertmsg = function(){
+      console.log(board);
+      console.log("3秒経過");
+      status = "end";
+      autoWhite();
+    }
 
-  if (myColor == "white"){
-    setTimeout(alertmsg, 2000);
-  }
+    if (myColor == "white"){
+      setTimeout(alertmsg, 2000);
+    }
 
-  function autoWhite(){
-    if (status == "end") {
-      if (checkCandidate().length > 0) {
-        document.getElementById("comment").innerHTML = " ";
+    function autoWhite(){
+      if (status == "end") {
+        if (checkCandidate().length > 0) {
+          document.getElementById("comment").innerHTML = " ";
 
-        var maxWhite = {score: 0, pos: []};
+          var maxWhite = {score: 0, pos: []};
+          // console.log(board);
 
-        for (var i = 0; i < board.length; i++) {
-          for (var j = 0; j < board[i].length; j++) {
-            if (board[i][j] == "no"){
-              checkAllDirection([i,j]);
-              if (checkRule([i,j])) {
-                // scores = calScore();
-                // whiteScore = scores[0];
-                // if (maxWhite.score < whiteScore) {
-                  // maxWhite.score = whiteScore;
-                  maxWhite.pos = [i,j];
+          for (var i = 0; i < board.length; i++) {
+            for (var j = 0; j < board[i].length; j++) {
+              if (board[i][j] == "no"){
+                checkAllDirection([i,j]);
+                if (checkRule([i,j])) {
+                  // var newBoard = board.concat();
+                  // changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
+                  // changePos.push([i,j]);
+                  // updateBoard(changePos, myColor, newBoard);
+                  // score = evaluateBoard(newBoard);
+                  // if (maxWhite.score < score) {
+                    // maxWhite.score = score;
+                    maxWhite.pos = [i,j];
+                  // }
+                }
               }
             }
           }
+
+          checkAllDirection(maxWhite.pos);
+
+          changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
+          changePos.push(maxWhite.pos);
+          console.log(changePos)
+
+          updateBoard(changePos, myColor, board);
+          drawBoard();
+        } else {
+          document.getElementById("comment").innerHTML = "No Place for White";
         }
-
-        checkAllDirection(maxWhite.pos);
-
-        changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
-        changePos.push(maxWhite.pos);
-
-        updateBoard(changePos, myColor);
-        drawBoard();
-      } else {
-        document.getElementById("comment").innerHTML = "No Place for White";
       }
+      changeTurn();
+      calScore();
     }
-    changeTurn();
-    calScore();
   }
 });
