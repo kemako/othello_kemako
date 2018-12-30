@@ -7,7 +7,7 @@ var cs       = document.getElementById('othelloCanvas'),
       y: csHeight / 2
     };
 
-var count = 0;
+// var count = 0;
 
 var board = [];
 for (var i = 0; i <= 7 ; i++) {
@@ -29,7 +29,6 @@ var rivalColor = "white";
 var placeable = "false";
 
 ctx.lineWidth = 2;
-// ctx.fillStyle = 'rgba(155, 187, 89, 0.7)';
 ctx.fillStyle = "seagreen";
 ctx.fillRect(0, 0, 480, 480);
 
@@ -44,12 +43,12 @@ function drawLine(xStart,yStart,xEnd,yEnd) {
 function drawCircle(pos,color) {
   var x = pos[0];
   var y = pos[1];
-  board[x][y] = color;
   ctx.beginPath();
   ctx.fillStyle = color;
   ctx.arc(60*x + 30 , 60*y + 30, 20, 0, Math.PI*2, true);
   ctx.fill();
   ctx.stroke();
+  // board[x][y] = color;
 }
 
 function initCircle(pos,color) {
@@ -110,19 +109,21 @@ function calScore(){
 };
 
 function changeTurn(){
-  count++;
+  // count++;
   document.getElementById("turn").innerHTML = "Next turn : " + rivalColor;
-  if(count%2 == 0){
-    rivalColor = "white";
-    myColor = "black";
-  } else {
-    rivalColor = "black";
-    myColor = "white";
-  }
+  tmpColor = myColor;
+  myColor = rivalColor;
+  rivalColor = tmpColor;
+    // rivalColor = "white";
+    // myColor = "black";
 }
 
 function placeCircle(pos){
+  var x = pos[0];
+  var y = pos[1];
+  // board[x][y] = myColor;
   drawCircle(pos,myColor);
+  board[x][y] = myColor;
   changeTurn();
   scores = calScore();
   whiteScore = scores[0];
@@ -133,7 +134,12 @@ function placeCircle(pos){
 
 function changeColor(arr) {
   for (var i = 0; i < arr.length; i++){
+    var x = arr[i][0];
+    var y = arr[i][1];
+    console.log(x,y);
+
     drawCircle(arr[i],myColor);
+    board[x][y] = myColor;
   }
 }
 
@@ -270,9 +276,11 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     currentPos = [centerX,centerY]
 
     checkAllDirection(currentPos);
+    console.log("hh");
+    console.log(placeable);
 
     if (placeable == "true") {
-      console.log('true');
+      console.log("true");
 
       changeColor(up);
       changeColor(down);
@@ -284,7 +292,7 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
       changeColor(ul);
 
       placeCircle(currentPos);
-      console.log(count);
+      // console.log(count);
     }
   }
 
