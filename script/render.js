@@ -29,6 +29,7 @@ function initOthello(){
   updateBoard(whiteFirst, "white", board);
   updateBoard(blackFirst, "black", board);
   drawBoard(board);
+  document.getElementById("turn").innerHTML = "Go ahead!";
 }
 
 function drawBoard(boardCurrent) {
