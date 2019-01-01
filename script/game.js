@@ -1,3 +1,4 @@
+//オセロのゲーム自体のルールなど
 function calCenter(x,y){
   var centerCircle = {
     x: x/60,
@@ -22,28 +23,6 @@ function calScore(){
   = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
 }
 
-function evaluateBoard(boardCurrent){
-  var whiteScore = 0;
-  var blackScore = 0;
-  for (var i = 0; i < boardCurrent.length; i++) {
-    for(var j = 0; j < boardCurrent[i].length; j++) {
-      if ( [i,j] == [0,0] || [i,j] == [0,7] || [i,j] == [7,0] || [i,j] == [7,7]) {
-        var point = 5;
-      } else {
-        var point = 1;
-      }
-      if(boardCurrent[i][j] == "white") {
-        whiteScore = whiteScore + point;
-      } else if (boardCurrent[i][j] == "black") {
-        blackScore = blackScore + point;
-      }
-    }
-  }
-  var rivalCandidateLen = checkCandidate(rivalColor, boardCurrent).length;
-  var score = whiteScore - rivalCandidateLen*0.5;
-  return score;
-}
-
 function changeTurn(){
   document.getElementById("turn").innerHTML = "Next turn : " + rivalColor;
   var tmpColor = myColor;
@@ -52,10 +31,14 @@ function changeTurn(){
 }
 
 function updateBoard(data, color, boardCurrent) {
-  for (var i = 0; i < data.length; i++){
-    var x = data[i][0];
-    var y = data[i][1];
-    boardCurrent[x][y] = color;
+  if (data != [Array(0)]){
+    for (var i = 0; i < data.length; i++){
+      var x = data[i][0];
+      var y = data[i][1];
+      boardCurrent[x][y] = color;
+    }
+  } else {
+    console.log("cannot update board");
   }
 }
 
@@ -144,5 +127,6 @@ function checkCandidate(color, boardCurrent){
     }
     changeTurn();
   }
+  console.log(candidate);
   return candidate;
 }
