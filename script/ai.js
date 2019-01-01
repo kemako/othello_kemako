@@ -35,6 +35,7 @@ function copyBoard(boardCurrent){
 }
 
 function autoWhite(){
+  console.log(myColor);
   if(myColor == "white"){
     if (checkCandidate("white",board).length > 0) {
       document.getElementById("comment").innerHTML = " ";
@@ -72,9 +73,36 @@ function autoWhite(){
                       changeP = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
                       changeP.push([n,m]);
                       updateBoard(changeP, myColor, n2Board);
-                      var score = evaluateBoard(n2Board);
-                      if (minWhite.score > score) {
-                        minWhite.score = score;
+
+                      changeTurn();
+                      // 白の手
+                      var max3White = {score: -100, pos: []};
+
+                      for (var k = 0; k < n2Board.length; k++) {
+                        for (var l = 0; l < n2Board[n].length; l++){
+                          if (n2Board[k][l] == "no") {
+                            var n3Board = copyBoard(n2Board);
+                            checkAllDirection([k,l], n3Board);
+
+                            if (checkRule([k,l], n3Board)) {
+                              var changeP3;
+                              changeP3 = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
+                              changeP3.push([k,l]);
+                              updateBoard(changeP3, myColor, n3Board);
+                              var score = evaluateBoard(n3Board);
+                              if (max3White.score < score) {
+                                max3White.score = score;
+                                max3White.pos = [k,l];
+                              }
+                            }
+
+                          }
+                        }
+                      }
+                      changeTurn();
+                      // var score = evaluateBoard(n2Board);
+                      if (minWhite.score > max3White.score) {
+                        minWhite.score = max3White.score;
                         minWhite.pos = [n,m];
                       }
                     }
@@ -99,11 +127,14 @@ function autoWhite(){
       var changeWhite;
       changeWhite = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
       changeWhite.push(maxWhite.pos);
+      console.log(changeWhite);
+      console.log(changeWhite);
 
       updateBoard(changeWhite, myColor, board);
       drawBoard(board);
     } else {
       document.getElementById("comment").innerHTML = "No Place for White";
+      console.log("no place");
     }
     changeTurn();
     console.log("changed");

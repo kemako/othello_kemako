@@ -50,7 +50,6 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
         var currentPos = [centerX,centerY]
 
         checkAllDirection(currentPos, board);
-        console.log("hh");
 
         if (checkRule(currentPos,board)) {
           var changePos = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
@@ -74,6 +73,6 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
     autoWhite();
 
   } else {
-    document.getElementById("comment").innerHTML = "No Place for White";
+    autoWhite();
   }
 });
