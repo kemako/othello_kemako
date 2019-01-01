@@ -1,5 +1,4 @@
 //オセロのゲーム自体のルールなど
-
 function calCenter(x,y){
   var centerCircle = {
     x: x/60,
@@ -32,10 +31,14 @@ function changeTurn(){
 }
 
 function updateBoard(data, color, boardCurrent) {
-  for (var i = 0; i < data.length; i++){
-    var x = data[i][0];
-    var y = data[i][1];
-    boardCurrent[x][y] = color;
+  if (data != [Array(0)]){
+    for (var i = 0; i < data.length; i++){
+      var x = data[i][0];
+      var y = data[i][1];
+      boardCurrent[x][y] = color;
+    }
+  } else {
+    console.log("cannot update board");
   }
 }
 
@@ -124,5 +127,6 @@ function checkCandidate(color, boardCurrent){
     }
     changeTurn();
   }
+  console.log(candidate);
   return candidate;
 }

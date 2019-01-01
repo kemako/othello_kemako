@@ -70,9 +70,9 @@ document.getElementById("othelloCanvas").addEventListener("click", function(even
       calScore();
     }
 
-    autoWhite();
+    setTimeout("autoWhite()",2000);
 
   } else {
-    autoWhite();
+    setTimeout("autoWhite()",2000);
   }
 });
