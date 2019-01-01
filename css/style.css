@@ -1,0 +1,19 @@
+.description {
+  font-family: 'arial black';
+}
+
+#white-desc {
+  color: gray;
+}
+
+#black-desc {
+  color: black;
+}
+
+#turn {
+  color: hotpink;
+}
+
+#score {
+  font-family: 'arial';
+}

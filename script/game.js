@@ -20,7 +20,16 @@ function calScore(){
     }
   }
   document.getElementById("score").innerHTML
-  = "White Score : " + whiteScore + "<br>" + " Black Score : " + blackScore;
+  = "White   " + whiteScore + " : " + blackScore + "   Black";
+  if (whiteScore + blackScore >= 64) {
+    if (whiteScore > blackScore) {
+      document.getElementById("turn").innerHTML = "YOU LOSE";
+    } else if (whiteScore < blackScore) {
+      document.getElementById("turn").innerHTML = "YOU WIN!!!";
+    } else {
+      document.getElementById("turn").innerHTML = "DRAW";
+    }
+  }
 }
 
 function changeTurn(){
@@ -31,11 +40,15 @@ function changeTurn(){
 }
 
 function updateBoard(data, color, boardCurrent) {
-  if (data != [Array(0)]){
+  if (data != "[Array(0)]"){
     for (var i = 0; i < data.length; i++){
-      var x = data[i][0];
-      var y = data[i][1];
-      boardCurrent[x][y] = color;
+      if (data[i].length > 1) {
+        var x = data[i][0];
+        var y = data[i][1];
+        boardCurrent[x][y] = color;
+      } else {
+        console.log("cannot update board");
+      }
     }
   } else {
     console.log("cannot update board");
