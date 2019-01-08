@@ -31,15 +31,23 @@
     </p>
 
     <h2>Detail</h2>
+    <h3>Algorithm</h3>
+    <p>
+      <img border="0" src="./img/minmax.png" width="500" alt="othello board score">
+    </p>
+    <p>MiniMax法というのは「完全情報零和ゲーム」に適している.<br>
+    「自分にとっての最善手は、相手にとっての最悪手」と言った考えに基づいており、<br>
+      自分は評価値がMaxとなる手を選択し、相手は評価値がMinとなる手を選択すると仮定して先読みを行う.</p>
+    <p>今回、MiniMax法の深さは3としたので上の図のような流れで白は次に打つ手を決めている.</p>
+
     <h3>Board Score</h3>
-    <p>盤面の評価は以下のようにした.</p>
+    <p>MiniMax法で使う評価値は、盤面のそれぞれのマスに点数をつけ、それらを加算したものをその盤面の評価値とした.<br>
+      点数は以下のように設定した.</p>
     <p>
       <img border="0" src="./img/board_score.png" width="500" alt="othello board score">
     </p>
     <p>角をとると得点が高く、角の隣をとると得点が低くなるようにした.</p>
 
-    <h3>Algorithm</h3>
-    <p>MiniMax法の深さは3とした.</p>
 
     <script type="text/javascript" src="script/render.js"></script>
     <script type="text/javascript" src="script/game.js"></script>
