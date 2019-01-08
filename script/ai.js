@@ -1,12 +1,12 @@
 var scoreBoard = [
-  [45, -11, 4, -1, -1, 4, -11, 45],
+  [60, -11, 4, -1, -1, 4, -11, 60],
   [-11, -16, -1, -3, -3, -1, -16, -11],
   [4, -1, 2, -1, -1, 2, -1, 4],
   [-1, -3, -1, 0, 0, -1, -3, -1],
   [-1, -3, -1, 0, 0, -1, -3, -1],
   [4, -1, 2, -1, -1, 2, -1, 4],
   [-11, -16, -1, -3, -3, -1, -16, -11],
-  [45, -11, 4, -1, -1, 4, -11, 45]
+  [60, -11, 4, -1, -1, 4, -11, 60]
 ]
 
 function evaluateBoard(boardCurrent){
@@ -23,7 +23,7 @@ function evaluateBoard(boardCurrent){
     }
   }
   var rivalCandidateLen = checkCandidate(rivalColor, boardCurrent).length;
-  var score = whiteScore - blackScore*0.5 - rivalCandidateLen*0.5;
+  var score = whiteScore - blackScore*1.0 - rivalCandidateLen*0.5;
   return score;
 }
 
@@ -96,7 +96,7 @@ function autoWhite(){
                               changeP3.push([k,l]);
                               updateBoard(changeP3, myColor, n3Board);
                               var score = evaluateBoard(n3Board);
-                              if (max3White.score < score) {
+                              if (max3White.score <= score) {
                                 max3White.score = score;
                                 max3White.pos = [k,l];
                               }
@@ -112,7 +112,7 @@ function autoWhite(){
 
                       changeTurn();
                       // var score = evaluateBoard(n2Board);
-                      if (minWhite.score > max3White.score) {
+                      if (minWhite.score >= max3White.score) {
                         minWhite.score = max3White.score;
                         minWhite.pos = [n,m];
                       }
@@ -128,7 +128,7 @@ function autoWhite(){
               changeTurn();
 
               // var score = evaluateBoard(newBoard);
-              if (maxWhite.score < minWhite.score) {
+              if (maxWhite.score <= minWhite.score) {
                 maxWhite.score = minWhite.score;
                 maxWhite.pos = [i,j];
               }
@@ -142,6 +142,7 @@ function autoWhite(){
       var changeWhite;
       changeWhite = up.data.concat(down.data, right.data, left.data, ur.data, dr.data, dl.data, ul.data);
       changeWhite.push(maxWhite.pos);
+      console.log(maxWhite);
       console.log(changeWhite);
 
       updateBoard(changeWhite, myColor, board);

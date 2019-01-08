@@ -6,12 +6,25 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <p class='description' id='white-desc'>White: MiniMax algorithm</p>
-    <p class='description' id='black-desc'>Black: YOU</p>
-    <canvas id="othelloCanvas" width="480" height="480"></canvas>
-    <p class='description' id='turn'></p>
-    <p class='description' id='score'></p>
-    <p class='description' id='comment'></p>
+    <h2>Othello AI</h2>
+    <table>
+      <tr>
+        <th>
+          <p class='description' id='white-desc'>White: MiniMax algorithm</p>
+          <p class='description' id='black-desc'>Black: YOU</p>
+        </th>
+        <th>
+          <canvas id="othelloCanvas" width="480" height="480"></canvas>
+        </th>
+        <th>
+          <p class='description' id='turn'></p>
+          <p class='description' id='score'></p>
+          <p class='description' id='comment'></p>
+        </th>
+      </tr>
+    </table>
+
+
     <script type="text/javascript" src="script/render.js"></script>
     <script type="text/javascript" src="script/game.js"></script>
     <script type="text/javascript" src="script/ai.js"></script>
