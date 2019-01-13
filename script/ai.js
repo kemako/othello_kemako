@@ -21,14 +21,14 @@ var scoreBoard2 = [
 ]
 
 var scoreBoard3 = [
-  [ 10, 1, 1, 1, 1, 1, 1, 10],
-  [  1, 1, 1, 1, 1, 1, 1,  1],
-  [  1, 1, 1, 1, 1, 1, 1,  1],
-  [  1, 1, 1, 1, 1, 1, 1,  1],
-  [  1, 1, 1, 1, 1, 1, 1,  1],
-  [  1, 1, 1, 1, 1, 1, 1,  1],
-  [  1, 1, 1, 1, 1, 1, 1,  1],
-  [ 10, 1, 1, 1, 1, 1, 1, 10]
+  [ 15, -3, 1, 1, 1, 1, -3, 15],
+  [ -3, -3, 1, 1, 1, 1, -3, -3],
+  [ 1, 1, 1, 1, 1, 1, 1, 1],
+  [ 1, 1, 1, 1, 1, 1, 1, 1],
+  [ 1, 1, 1, 1, 1, 1, 1, 1],
+  [ 1, 1, 1, 1, 1, 1, 1, 1],
+  [ -3, -3, 1, 1, 1, 1, -3, -3],
+  [ 15, -3, 1, 1, 1, 1, -3, 15]
 ]
 
 function evaluateBoard(boardCurrent){
@@ -59,7 +59,7 @@ function evaluateBoard(boardCurrent){
   } else if(count >= 20 && count < 45){
     var score = whiteScore - rivalCandidateLen*0.5;
   } else {
-    var score = whiteScore - rivalCandidateLen*0.3;
+    var score = whiteScore - blackScore - rivalCandidateLen*0.3;
   }
   return score;
 }
