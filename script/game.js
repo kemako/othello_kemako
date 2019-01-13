@@ -19,6 +19,9 @@ function calScore(){
       }
     }
   }
+
+  count = whiteScore + blackScore;
+
   document.getElementById("score").innerHTML
   = "White   " + whiteScore + " : " + blackScore + "   Black";
   if (whiteScore + blackScore >= 64) {
