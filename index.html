@@ -40,14 +40,56 @@
       自分は評価値がMaxとなる手を選択し、相手は評価値がMinとなる手を選択すると仮定して先読みを行う.</p>
     <p>今回、MiniMax法の深さは3としたので上の図のような流れで白は次に打つ手を決めている.</p>
 
-    <h3>Board Score</h3>
-    <p>MiniMax法で使う評価値は、盤面のそれぞれのマスに点数をつけ、それらを加算したものをその盤面の評価値とした.<br>
-      点数は以下のように設定した.</p>
-    <p>
-      <img border="0" src="./img/board_score.png" width="500" alt="othello board score">
+    <h3>Tactics</h3>
+    <p>序盤・中盤・終盤で戦術を変えた.<br>各局面の評価値をscoreとおく.</p>
+    <h4>序盤</h4>
+    <p>score = (自分の点数) - (相手が打てる数)*1.0</p>
+    <p>ポイント
+      <ul>
+        <li>相手が打てる数を少なくする</li>
+        <li>中央付近の得点を高くすることで中割りの状態を作る</li>
+        <li>点数を負の数にすることで、石をあまり取りすぎないようにする</li>
+      </ul>
     </p>
-    <p>角をとると得点が高く、角の隣をとると得点が低くなるようにした.</p>
 
+    <p>
+      <img border="0" src="./img/board_score1.png" width="500" alt="othello board score">
+    </p>
+
+    <h4>中盤</h4>
+    <p>score = (自分の点数) - (相手が打てる数)*0.5</p>
+    <p>ポイント
+      <ul>
+        <li>角の得点を高くすることで、角を取れるときは必ず取るようにする</li>
+        <li>点数を負の数にすることで、石をあまり取りすぎないようにする</li>
+      </ul>
+    </p>
+
+    <p>
+      <img border="0" src="./img/board_score2.png" width="500" alt="othello board score">
+    </p>
+
+    <h4>終盤</h4>
+    <p>score = (自分の点数) - (相手の点数) - (相手が打てる数)*0.3</p>
+    <p>ポイント
+      <ul>
+        <li>位置による得点差をつけないことで、石を出来るだけ多く取るようにする</li>
+      </ul>
+    </p>
+
+    <p>
+      <img border="0" src="./img/board_score3.png" width="500" alt="othello board score">
+    </p>
+
+
+    <h2>Reference</h2>
+    <p>
+      <ul>
+        <li><a href="https://www.hasera.net/othello/kotsu.html">オセロの基本戦術</a></li>
+        <li><a href="http://fible.s5.xrea.com/laboratory/othello/othello.html">序盤・中盤・終盤での戦術</a></li>
+        <li><a href="https://uguisu.skr.jp/othello/5-1.html">盤面の評価関数</a></li>
+      </ul>
+    </p>
 
     <script type="text/javascript" src="script/render.js"></script>
     <script type="text/javascript" src="script/game.js"></script>
