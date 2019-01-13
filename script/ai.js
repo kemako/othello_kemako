@@ -1,18 +1,48 @@
-var scoreBoard = [
-  [60, -11, 4, -1, -1, 4, -11, 60],
-  [-11, -16, -1, -3, -3, -1, -16, -11],
-  [4, -1, 2, -1, -1, 2, -1, 4],
-  [-1, -3, -1, 0, 0, -1, -3, -1],
-  [-1, -3, -1, 0, 0, -1, -3, -1],
-  [4, -1, 2, -1, -1, 2, -1, 4],
-  [-11, -16, -1, -3, -3, -1, -16, -11],
-  [60, -11, 4, -1, -1, 4, -11, 60]
+var scoreBoard1 = [
+  [ 30, -12, -1, -2, -2, -1, -12,  30],
+  [-12, -15, -3, -3, -3, -3, -15, -12],
+  [ -1,  -3, -1, -2, -2, -1,  -3,  -1],
+  [ -2,  -3, -2,  1,  1, -2,  -3,  -2],
+  [ -2,  -3, -2,  1,  1, -2,  -3,  -2],
+  [ -1,  -3, -1, -2, -2, -1,  -3,  -1],
+  [-12, -15, -3, -3, -3, -3, -15, -12],
+  [ 30, -12, -1, -2, -2, -1, -12,  30]
+]
+
+var scoreBoard2 = [
+  [ 80, -22,  0, -1, -1,  0, -22,  80],
+  [-22, -25, -3, -3, -3, -3, -25, -22],
+  [  0,  -3,  0, -1, -1,  0,  -3,   0],
+  [ -1,  -3, -1,  0,  0, -1,  -3,  -1],
+  [ -1,  -3, -1,  0,  0, -1,  -3,  -1],
+  [  0,  -3,  0, -1, -1,  0,  -3,   0],
+  [-22, -25, -3, -3, -3, -3, -25, -22],
+  [ 80, -22,  0, -1, -1,  0, -22,  80]
+]
+
+var scoreBoard3 = [
+  [ 10, 1, 1, 1, 1, 1, 1, 10],
+  [  1, 1, 1, 1, 1, 1, 1,  1],
+  [  1, 1, 1, 1, 1, 1, 1,  1],
+  [  1, 1, 1, 1, 1, 1, 1,  1],
+  [  1, 1, 1, 1, 1, 1, 1,  1],
+  [  1, 1, 1, 1, 1, 1, 1,  1],
+  [  1, 1, 1, 1, 1, 1, 1,  1],
+  [ 10, 1, 1, 1, 1, 1, 1, 10]
 ]
 
 function evaluateBoard(boardCurrent){
   var whiteScore = 0;
   var blackScore = 0;
   var point = 1;
+  var scoreBoard;
+  if (count < 24){
+    scoreBoard = scoreBoard1;
+  } else if(count >= 24 && count < 48){
+    scoreBoard = scoreBoard2;
+  } else {
+    scoreBoard = scoreBoard3;
+  }
   for (var i = 0; i < boardCurrent.length; i++) {
     for(var j = 0; j < boardCurrent[i].length; j++) {
       if(boardCurrent[i][j] == "white") {
@@ -23,7 +53,14 @@ function evaluateBoard(boardCurrent){
     }
   }
   var rivalCandidateLen = checkCandidate(rivalColor, boardCurrent).length;
-  var score = whiteScore - blackScore*1.0 - rivalCandidateLen*0.5;
+
+  if (count < 20){
+    var score = whiteScore - rivalCandidateLen*1.0;
+  } else if(count >= 20 && count < 45){
+    var score = whiteScore - rivalCandidateLen*0.5;
+  } else {
+    var score = whiteScore - rivalCandidateLen*0.3;
+  }
   return score;
 }
 
@@ -45,7 +82,7 @@ function autoWhite(){
   if(myColor == "white"){
     if (checkCandidate("white",board) != "[]") {
       document.getElementById("comment").innerHTML = " ";
-      var count = 1;
+      // var count = 1;
       // var eval = {score: 1000, pos: []};
       // eval = minmax(board, count, eval);
 

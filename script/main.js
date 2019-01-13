@@ -24,6 +24,8 @@ var ul = {data: [], deltaX: -1, deltaY: -1};
 var myColor = "black";
 var rivalColor = "white";
 
+var count = 4;
+
 initOthello();
 
 document.getElementById("othelloCanvas").addEventListener("click", function(event) {
